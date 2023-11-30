@@ -41,8 +41,9 @@ jobs:
     - name: Check deploy
       if: always()
       run: |
-        if [ ${{ steps.deploy_to_render.outcome }} == 'success' ]; then
-          echo "Successful deploy"
+        DEPLOY_OUTPUT=$(echo "${{ steps.deploy_to_render.outputs.response }}")
+        if [[ $DEPLOY_OUTPUT == *"200"* || $DEPLOY_OUTPUT == *"201"* ]]; then
+          echo "Successful deploy or no error code found"
         else
-          echo "Failed deploy with error code: ${{ steps.deploy_to_render.outcome }}"
-        fi
+          echo "Failed deploy: $DEPLOY_OUTPUT"
+          exit 1
