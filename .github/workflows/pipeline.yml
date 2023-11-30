@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build Test and Deploy
 
 on:
   push:
@@ -11,15 +11,31 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [14.x,16.x,18.x]
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: Use Node.js 18
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: Build the app
       run: npm install
     - name: Run integration tests
       run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to Render
+      uses: johnlindquist/ghaction-gcloud@v1
+      with:
+        project_id: ${{ secrets.RENDER_API_KEY }}
+        service_account_key: ${{ secrets.RENDER_SERVICE_ID }}
+        export_version: true
