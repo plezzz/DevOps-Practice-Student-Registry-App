@@ -43,7 +43,7 @@ jobs:
       run: |
         DEPLOY_OUTPUT=$(echo "${{ steps.deploy_to_render.outputs.response }}")
         if [[ $DEPLOY_OUTPUT == *"200"* || $DEPLOY_OUTPUT == *"201"* ]]; then
-          echo "Successful deploy or no error code found"
+          echo "Successful deploy or no error code found in deploy output"
         else
           echo "Failed deploy: $DEPLOY_OUTPUT"
           exit 1
