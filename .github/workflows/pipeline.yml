@@ -38,6 +38,11 @@ jobs:
       with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-    - name: Check previous step
-      if: failure()
-      run: echo "Previous step failed"
+    - name: Check deploy
+      if: always()
+      run: |
+        if [ ${{ steps.deploy_to_render.outcome }} == 'success' ]; then
+          echo "Successful deploy"
+        else
+          echo "Failed deploy with error code: ${{ steps.deploy_to_render.outcome }}"
+        fi
