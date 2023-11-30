@@ -34,8 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy to Render
-      uses: johnlindquist/ghaction-gcloud@v1
+      uses: johnbeynon/render-deploy-action@v0.0.8
       with:
         project_id: ${{ secrets.RENDER_API_KEY }}
         service_account_key: ${{ secrets.RENDER_SERVICE_ID }}
-        export_version: true
